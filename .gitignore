@@ -1,0 +1,75 @@
+# Python bytecode files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.so
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+# Add any other virtual environment names if used
+
+# FastAPI specific
+*.db
+*.sqlite3
+*.log
+
+# IDE specific files
+.vscode/
+.idea/
+
+# MyPy and Pyright configuration
+.mypy_cache/
+.pyright/
+
+# VSCode settings folder
+.vscode/
+
+# PyCharm
+.idea/
+
+# Test coverage reports
+.coverage
+.coverage.*
+nosetests.xml
+pytest.xml
+test-results/
+
+# Flask-SQLAlchemy migrations folder
+migrations/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# Django specific (in case used)
+*.sqlite3
+*.log
+media/
+static/
+
+# Docker
+.docker/
+
+# OS-specific files
+.DS_Store  # macOS
+Thumbs.db  # Windows
+
+# Environment files
+.env
+.env.*
+*.env.*
+
+# Distribution and packaging
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Temporary files created by IDEs or editors
+*.swp  # Vim temporary files
+*.swo
