@@ -27,22 +27,26 @@
 #         channel = create_channel(connection)
 
 #         channel.basic_consume(
-#             queue=settings.RABBITMQ_QUEUE, on_message_callback=callback, auto_ack=False
+#             queue=settings.RABBITMQ_QUEUE,
+#             on_message_callback=callback, auto_ack=False
 #         )
 
 #         print(
-#             f"Waiting for messages in {settings.RABBITMQ_QUEUE}. To exit press CTRL+C."
+#             f"Waiting for messages in {settings.RABBITMQ_QUEUE}."
+#               " To exit press CTRL+C."
 #         )
 #         channel.start_consuming()
 #     except Exception as e:
 #         print(f"Error in consumer: {e}")
 
 
-import json
-import aio_pika
 import asyncio
-from app.consumers.user_consumer import NotificationConsumer
+import json
+
+import aio_pika
+
 from app.config import settings
+from app.consumers.user_consumer import NotificationConsumer
 
 
 async def callback(message: aio_pika.IncomingMessage):
@@ -75,11 +79,13 @@ async def start_consuming():
             # Start consuming messages
             await queue.consume(callback)
             print(
-                f"Waiting for messages in {settings.RABBIT_MQ_QUEUE}. To exit press CTRL+C."
+                f"Waiting for messages in {settings.RABBIT_MQ_QUEUE}. "
+                "To exit press CTRL+C."
             )
 
             # Keep the consumer running
-            await asyncio.Future()  # This will keep the program running to listen for messages
+            # This will keep the program running to listen for messages
+            await asyncio.Future()
 
     except Exception as e:
         print(f"Error in consumer: {e}")

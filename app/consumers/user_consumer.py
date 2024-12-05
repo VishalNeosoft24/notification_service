@@ -10,7 +10,8 @@ class NotificationConsumer:
 
     async def create_user_notification(self, user_id, message, operation):
         """
-        Create a notification for a user in the database and trigger a real-time notification.
+        Create a notification for a user in the database and
+        trigger a real-time notification.
         Args:
             user_id (int): ID of the user.
             message (str): Notification message.

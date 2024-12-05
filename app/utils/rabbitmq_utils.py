@@ -1,5 +1,5 @@
 import pika
-import json
+
 from app.config import settings
 
 

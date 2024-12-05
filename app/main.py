@@ -1,8 +1,10 @@
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, BackgroundTasks
-from typing import Dict
-from app.services.rabbitmq_consumer import start_consuming
 import asyncio
 from contextlib import asynccontextmanager
+from typing import Dict
+
+from fastapi import BackgroundTasks, FastAPI, WebSocket, WebSocketDisconnect
+
+from app.services.rabbitmq_consumer import start_consuming
 
 
 @asynccontextmanager
@@ -70,9 +72,9 @@ async def send_notification_to_user(user_id: int, message: str):
     if connection:
         try:
             await connection.send_text(message)
-        except:
+        except Exception as e:
             # Handle the case where the connection might have closed
             active_connections.pop(user_id, None)
-            print(f"Failed to send message to user {user_id}")
+            print(f"Failed to send message to user {user_id} error = {e}")
     else:
         print(f"No active connection for user {user_id}")
