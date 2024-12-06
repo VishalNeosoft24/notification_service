@@ -1,5 +1,11 @@
+from fastapi import HTTPException
+from fastapi.security import OAuth2PasswordBearer
+
 from app.config import SessionLocal
 from app.models.notification import Notification
+from app.routers.notification_routes import send_notification_to_user
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 class NotificationConsumer:
@@ -28,8 +34,6 @@ class NotificationConsumer:
             db.commit()
             db.refresh(notification)
 
-        from app.main import send_notification_to_user
-
         await send_notification_to_user(user_id, message)
 
     async def process_notification_data(self, data):
@@ -38,7 +42,6 @@ class NotificationConsumer:
         Args:
             data (dict): Notification data payload.
         """
-
         try:
             if data["operation"] == "user_register":
                 await self.user_register(data=data)
@@ -52,22 +55,12 @@ class NotificationConsumer:
             data (dict): Notification data for user registration.
         """
         try:
-            message = "New user registered"
+            message = "New user registered successfully"
             user_id = data.get("user_id")
             operation = data.get("operation")
 
             await self.create_user_notification(user_id, message, operation)
-            print(f"Notification saved successfully: {data}")
-
         except Exception as e:
-            print(f"Error processing message: {e}")
-
-
-# mail
-
-
-def send_user_notifications():
-    pass
-
-
-# def send_email
+            raise HTTPException(
+                status_code=404, detail=f"Error processing message: {e}"
+            )
