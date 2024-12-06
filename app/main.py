@@ -1,9 +1,9 @@
 import asyncio
 from contextlib import asynccontextmanager
-from typing import Dict
 
-from fastapi import BackgroundTasks, FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import BackgroundTasks, FastAPI
 
+from app.routers.notification_routes import router as notification_router
 from app.services.rabbitmq_consumer import start_consuming
 
 
@@ -27,6 +27,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+app.include_router(notification_router)
 
 
 @app.get("/")
@@ -39,42 +40,3 @@ async def start_background_consumer(background_tasks: BackgroundTasks):
     """Start the RabbitMQ message consumer in the background"""
     background_tasks.add_task(start_consuming)
     return {"message": "Started RabbitMQ consumer in background"}
-
-
-# Dictionary to store WebSocket connections by user ID
-active_connections: Dict[str, WebSocket] = {}
-
-
-# WebSocket route for receiving notifications
-@app.websocket("/ws/notifications/{user_id}")
-async def websocket_endpoint(websocket: WebSocket, user_id: int):
-    # Accept the WebSocket connection
-    await websocket.accept()
-
-    # Store the WebSocket connection for the specific user
-    active_connections[user_id] = websocket
-    print(f"User {user_id} connected.")
-
-    try:
-        while True:
-            # Wait for a message from the client (if needed)
-            data = await websocket.receive_text()
-            print(f"Received data from {user_id}: {data}")
-    except WebSocketDisconnect:
-        # Handle disconnections
-        active_connections.pop(user_id, None)
-        print(f"User {user_id} disconnected")
-
-
-# Function to send a notification to a specific user
-async def send_notification_to_user(user_id: int, message: str):
-    connection = active_connections.get(user_id)
-    if connection:
-        try:
-            await connection.send_text(message)
-        except Exception as e:
-            # Handle the case where the connection might have closed
-            active_connections.pop(user_id, None)
-            print(f"Failed to send message to user {user_id} error = {e}")
-    else:
-        print(f"No active connection for user {user_id}")
