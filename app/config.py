@@ -12,6 +12,8 @@ class Settings:
     RABBIT_MQ_QUEUE: str = os.getenv("RABBIT_MQ_QUEUE", "notification_queue")
     RABBIT_MQ_URL: str = os.getenv("RABBIT_MQ_URL")
     DATABASE_URL: str = os.getenv("DATABASE_URL")
+    SECRET_KEY: str = os.getenv("SECRET_KEY")
+    ALGORITHM: str = os.getenv("ALGORITHM")
 
 
 # Instantiate Settings
@@ -29,3 +31,5 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Base for Models
 Base = declarative_base()
+
+db = SessionLocal()
