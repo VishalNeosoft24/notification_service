@@ -1,12 +1,14 @@
 import requests
 from fastapi import HTTPException
 
+from app.config import settings
+
 
 class AuthService:
     """Verify token and get user profile"""
 
     def __init__(self):
-        self.DJANGO_VERIFY_TOKEN_URL = "http://127.0.0.1:8000/api/user/user-profile/"
+        self.BASE_URL = settings.BASE_URL
 
     def verify_user_token(self, token):
         """
@@ -15,8 +17,10 @@ class AuthService:
             token (str): access token.
         """
         headers = {"Authorization": f"Bearer {token}"}
+        DJANGO_VERIFY_TOKEN_URL = "http://127.0.0.1:8000/api/user/user-profile/"
+
         response = requests.get(
-            self.DJANGO_VERIFY_TOKEN_URL,
+            DJANGO_VERIFY_TOKEN_URL,
             headers=headers,
         )
         if response.status_code != 200:
