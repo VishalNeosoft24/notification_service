@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import BackgroundTasks, FastAPI
 
+from app.routers.email_routes import email_router
 from app.routers.notification_routes import router as notification_router
 from app.services.rabbitmq_consumer import start_consuming
 
@@ -28,6 +29,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 app.include_router(notification_router)
+app.include_router(email_router)
 
 
 @app.get("/")
