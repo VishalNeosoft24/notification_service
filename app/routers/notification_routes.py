@@ -24,12 +24,22 @@ auth_service = AuthService()
 active_connections: Dict[int, WebSocket] = {}
 
 
-@router.websocket("/ws/notifications/{user_id}")
-async def websocket_endpoint(websocket: WebSocket, user_id: int):
+@router.websocket("/ws/notifications/")
+async def websocket_endpoint(websocket: WebSocket):
     """
     WebSocket endpoint for real-time notifications.
     """
     try:
+        access_token = websocket.headers.get("Authorization")
+        if not access_token:
+            await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Authorization token missing or invalid.",
+            )
+        access_token = access_token.split()[1]
+        user_id = auth_service.verify_user_token(access_token)
+
         # Accept the WebSocket connection
         await websocket.accept()
 
