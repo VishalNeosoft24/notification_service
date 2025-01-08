@@ -14,6 +14,13 @@ class Settings:
     DATABASE_URL: str = os.getenv("DATABASE_URL")
     SECRET_KEY: str = os.getenv("SECRET_KEY")
     ALGORITHM: str = os.getenv("ALGORITHM")
+    BASE_URL: str = os.getenv("BASE_URL")
+    MAILTRAP_SMTP_HOST = os.getenv("MAILTRAP_SMTP_HOST")
+    MAILTRAP_SMTP_PORT = os.getenv("MAILTRAP_SMTP_PORT")
+    MAILTRAP_SMTP_USER = os.getenv("MAILTRAP_SMTP_USER")
+    MAILTRAP_SMTP_PASSWORD = os.getenv("MAILTRAP_SMTP_PASSWORD")
+    FROM_EMAIL = os.getenv("FROM_EMAIL")
+    TO_EMAIL = os.getenv("TO_EMAIL")
 
 
 # Instantiate Settings
